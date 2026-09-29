@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-User Vonage POC</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="control-panel">
+      <h2>Conference POC</h2>
+
+      <label>Room Name</label>
+      <input type="text" id="room-input" value="test-room" />
+
+      <label>User Identifier</label>
+      <input type="text" id="user-input" placeholder="e.g. user_01" />
+
+      <div class="actions">
+        <button id="join-btn">Join Call</button>
+        <button id="leave-btn" disabled>Leave</button>
+      </div>
+
+      <div id="status">Status: Idle</div>
+    </aside>
+
+    <main class="stage">
+      <div id="video-grid" class="video-grid"></div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
