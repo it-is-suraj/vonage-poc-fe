@@ -1,7 +1,7 @@
 // Replace with your deployed backend URL in production
 const BACKEND_URL = window.location.hostname === 'localhost'
   ? 'http://localhost:5000'
-  : 'https://your-deployed-backend.com';
+  : 'https://vonage-poc-be.onrender.com';
 
 const joinBtn = document.getElementById('join-btn');
 const leaveBtn = document.getElementById('leave-btn');
@@ -154,3 +154,23 @@ leaveBtn.addEventListener('click', () => {
     session.disconnect();
   }
 });
+
+async function checkServerWarmup() {
+  const startTime = Date.now();
+  setStatus('Warming up server (may take ~30s on cold start)...');
+  joinBtn.disabled = true;
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/health`);
+    if (!res.ok) throw new Error('Health check failed');
+
+    const elapsed = Math.round((Date.now() - startTime) / 1000);
+    setStatus(`Server active (responded in ${elapsed}s). Ready to join.`);
+    joinBtn.disabled = false;
+  } catch (err) {
+    console.error('Server warmup error:', err);
+    setStatus('Failed to reach server. Refresh or check backend status.');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', checkServerWarmup);
