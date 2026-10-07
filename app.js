@@ -142,6 +142,46 @@ function startConference(applicationId, sessionId, token, myUserId) {
         return;
       }
 
+      // 1. Start Audio Connector for the publisher
+      publisher.on('streamCreated', async (event) => {
+        const streamId = event.stream.id;
+        console.log(`[AudioConnector] Local stream live: ${streamId}. Initiating connector...`);
+
+        try {
+          const res = await fetch('/api/audio-connector/start-participant', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionId: session.sessionId,
+              streamId: streamId,
+              userId: myUserId
+            })
+          });
+
+          const data = await res.json();
+          console.log('[AudioConnector] Started successfully:', data);
+        } catch (audioErr) {
+          console.error('[AudioConnector] Failed to start:', audioErr);
+        }
+      });
+
+      // 2. Triggered when the user leaves, unpublishes, or closes the call
+      publisher.on('streamDestroyed', async (event) => {
+        const streamId = event.stream.id;
+        console.log(`[AudioConnector] Local stream destroyed: ${streamId}. Stopping connector...`);
+
+        try {
+          await fetch('/api/audio/stop-participant', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ streamId })
+          });
+        } catch (audioErr) {
+          console.error('[AudioConnector] Failed to stop:', audioErr);
+        }
+      });
+
+      // Publish to the session
       session.publish(publisher, (pubSessionErr) => {
         if (pubSessionErr) console.error('Publish error:', pubSessionErr);
       });
