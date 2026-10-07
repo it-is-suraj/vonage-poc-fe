@@ -148,7 +148,7 @@ function startConference(applicationId, sessionId, token, myUserId) {
         console.log(`[AudioConnector] Local stream live: ${streamId}. Initiating connector...`);
 
         try {
-          const res = await fetch('/api/audio-connector/start-participant', {
+          const res = await fetch(`${BACKEND_URL}/api/audio-connector/start-participant`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -175,7 +175,7 @@ function startConference(applicationId, sessionId, token, myUserId) {
         console.log(`[AudioConnector] Local stream destroyed: ${streamId}. Stopping connector...`);
 
         try {
-          await fetch('/api/audio/stop-participant', {
+          await fetch(`${BACKEND_URL}/api/audio/stop-participant`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ streamId })
