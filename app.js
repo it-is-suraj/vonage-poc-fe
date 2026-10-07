@@ -159,7 +159,11 @@ function startConference(applicationId, sessionId, token, myUserId) {
           });
 
           const data = await res.json();
-          console.log('[AudioConnector] Started successfully:', data);
+          if (!response.ok) {
+            console.error('[TEST] Server rejected start-participant:', data);
+          } else {
+            console.log('[TEST] Audio Connector started successfully:', data);
+          }
         } catch (audioErr) {
           console.error('[AudioConnector] Failed to start:', audioErr);
         }
@@ -176,6 +180,7 @@ function startConference(applicationId, sessionId, token, myUserId) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ streamId })
           });
+          console.log('[AudioConnector] Audio Connector stop request completed');
         } catch (audioErr) {
           console.error('[AudioConnector] Failed to stop:', audioErr);
         }
